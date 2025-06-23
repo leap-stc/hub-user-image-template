@@ -17,4 +17,5 @@ dependencies:
   - jupyterlab
   - pip
   - pip:
-    - jupyterlab_vscode
+    #- jupyterlab_vscode
+    - jupyterlab_slurm
