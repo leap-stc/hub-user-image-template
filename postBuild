@@ -1,15 +1,29 @@
 #!/usr/bin/env bash
 set -eux
 
-# 1) Download & install code-server
+# ───────────────────────────────────────────────
+# 1) Install code-server (standalone VS Code backend)
+# ───────────────────────────────────────────────
 CODE_SERVER_VER="4.21.1"
 wget -qO code-server.deb \
   https://github.com/coder/code-server/releases/download/v${CODE_SERVER_VER}/code-server_${CODE_SERVER_VER}_amd64.deb
-sudo dpkg -i code-server.deb
+dpkg -i code-server.deb
 rm code-server.deb
-
-# 2) Ensure the JLab extension is up to date
-pip install --no-deps --upgrade jupyterlab_vscode
-
-# 3) Symlink for convenience
 ln -sf /usr/bin/code-server /usr/local/bin/code-server
+
+# ───────────────────────────────────────────────
+# 2) (Optional) Ensure JupyterLab VS Code extension
+# ───────────────────────────────────────────────
+pip install --no-deps jupyterlab_vscode
+
+# ───────────────────────────────────────────────
+# 3) Install & enable jupyterlab-slurm
+# ───────────────────────────────────────────────
+pip install --no-deps jupyterlab_slurm
+jupyter serverextension enable --py --sys-prefix jupyterlab_slurm
+jupyter labextension install jupyterlab-slurm --no-build
+
+# ───────────────────────────────────────────────
+# 4) Rebuild JupyterLab with all extensions
+# ───────────────────────────────────────────────
+jupyter lab build
